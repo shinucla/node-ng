@@ -1,0 +1,52 @@
+<div class="container" style="width: 400px; margin: 160px auto;">
+  <form class="well"
+        method="post"
+        name="profileForm"
+        ng-submit="updateProfile(userProfile)"
+	novalidate>
+
+    <h2>User Profile</h2>
+    <div style="width: 100%;" class="input-group">
+      <input type="text"
+             placeholder={{user.firstname}}
+             name="firstname"
+             class="form-control"
+             ng-model="signupUser.firstname"
+             ng-minlength="1"
+             ng-maxlength="20"
+             required>
+      <p ng-show="signupForm.firstname.$invalid && !signupForm.firstname.$pristine"
+         class="help-block">Enter a valid Firstname</p>
+    </div>
+    <div style="width: 100%;" class="input-group">
+      <input type="text"
+             placeholder={{user.lastname}}
+             name="lastname"
+             class="form-control"
+             ng-model="signupUser.lastname"
+             ng-minlength="1"
+             ng-maxlength="20"
+             required>
+      <p ng-show="signupForm.lastname.$invalid && !signupForm.lastname.$pristine"
+         class="help-block">Enter a valid Lastname</p>
+    </div>
+    <div class="input-group" style="width: 100%;">
+      <input class="form-control"
+             type="email"
+             placeholder={{user.email}}
+             name="email"
+             ng-model="loginUser.email"
+             ng-minlength="1"
+             ng-maxlength="100"
+             required>
+      <p ng-show="loginForm.email.$invalid && !loginForm.email.$pristine"
+         class="help-block">Please enter a valid email</P>
+    </div>
+
+    <hr/>
+    <ol class="breadcrumb">
+      <li><a href="">Save</a></li>
+      <li><a href="#/">Home</a></li>
+    </ol>
+  </form>
+</div>
