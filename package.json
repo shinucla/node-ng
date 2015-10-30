@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-express-auth",
+  "description": "node.js + express + auth",
+  "author": "shin",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt-nodejs": "latest",
+    "body-parser": "latest",
+    "connect-flash": "latest",
+    "cookie-parser": "latest",
+    "csurf": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "geoip-lite": "latest",
+    "gm": "latest",
+    "googleapis": "^2.1.5",
+    "jade": "latest",
+    "mongoose": "latest",
+    "multer": "latest",
+    "node-geocoder": "latest",
+    "passport": "latest",
+    "passport-google": "latest",
+    "passport-http": "latest",
+    "passport-http-bearer": "latest",
+    "passport-http-oauth": "latest",
+    "passport-local": "latest",
+    "serve-favicon": "latest"
+  }
+}
