@@ -4,6 +4,7 @@
 
 module.exports = function(app) {
 
+  /* Login */
   app
     .route('/user/api/login')
     .post(function(req, res) {
@@ -20,6 +21,7 @@ module.exports = function(app) {
       });
     });
 
+  /* Signup */
   app
     .route('/user/api/signup')
     .post(function(req, res) {
@@ -37,5 +39,34 @@ module.exports = function(app) {
         ));
       });
     });
+
+  /* get user extension */
+  app
+    .route('/user/api/extension')
+    .get(app.apiRequiredLogin,
+         function(req, res) {
+           Domain.UserExtension.findOne({user_id: req.user._id}, function(err, extension) {
+             if (null === extension) {
+               extension = new Domain.UserExtension().save(function() {
+                 res.json({result: extension});
+               });
+             } else {
+               res.json({result: extension});
+             }
+           });
+         })
+
+  /*
+    .post(app.apirequiredlogin,
+    function(req, res) {
+    var json = req.body.extension;
+
+    Domain.UserExtension.findOne({user_id : req.user._id}, function(err, extension) {
+    extension.interests = json.interests;
+    extension.save();
+    });
+    })
+  */
+  ;
 
 };

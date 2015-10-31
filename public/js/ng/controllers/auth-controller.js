@@ -4,7 +4,7 @@
 // configuration, call angular.module without the array argument.
 angular.module('ngDemoApp')
 
-  .controller('authController', function($rootScope, $scope, AuthService, $location) {
+  .controller('authController', function($rootScope, $scope, AuthService, ServerService, $location) {
     
     $scope.login = function(credential) {
       AuthService
@@ -12,7 +12,8 @@ angular.module('ngDemoApp')
         .then(function(jwt) { // defer.resolve
 	  console.log(' oh yea logged in' );
 	  AuthService.saveJWT(jwt, function(err) {
-	    alert('Your web browser does not support storing settings locally. In Safari, the most common cause of  this is using "Private Browsing Mode"');
+	    alert('Your web browser does not support storing settings locally. '
+		  + 'In Safari, the most common cause of  this is using "Private Browsing Mode"');
 	  });
 	  $rootScope.user = AuthService.getUser();
 	  alert($rootScope.user.email);
@@ -35,6 +36,14 @@ angular.module('ngDemoApp')
 
 	}, function(errMsg) { // defer.reject
 	  AuthService.clearJWT();
+	});
+    };
+
+    $scope.getUserExtension = function() {
+      ServerService
+	.exec('/user/api/extension')
+	.then(function(result) {
+	  return result;
 	});
     };
 

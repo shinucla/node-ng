@@ -1,43 +1,22 @@
-//
-// User Schema
-//
+MAX_LOGIN_ATTEMPTS = 5;
+var LOCKED_TIME = 1000 * 60 * 60 * 2;  // two hours
+
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
 var jwt      = require('jsonwebtoken');
 var secret   = '$2a$08$BcBWyjKCJgclgfsGwEF0W===';
 
 var schema = mongoose.Schema({
-  // general
   firstname      : String,
   lastname       : String,
-  email       : String,
-  password    : String,
+  email          : String,
 
   status_bit     : Number,   // 0: delete 1: active 2: inactive
   role           : String,   // lower case: admin, canread, canwrite
 
   login_attempts : Number,
   locked_until   : Date,
-  userdetail     : {type: mongoose.Schema.Types.ObjectId, ref: 'user_profile'},
 });
-
-
-MAX_LOGIN_ATTEMPTS = 5;
-var LOCKED_TIME = 1000 * 60 * 60 * 2;  // two hours
-
-
-// public member methods
-//   Domain.User user = new User();
-//   user.validPassword(xxx);
-schema.methods.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
-};
-
-// public static methods
-//   Domain.User.generateHash(xxx)
-schema.statics.generateHash = function(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
 
 schema.statics.signupUser = function(jsonUser, callback) {
   // callback(Error, Domain.User entity)
@@ -51,15 +30,20 @@ schema.statics.signupUser = function(jsonUser, callback) {
 
       // if there is no user with that email
       var newUser            = new Domain.User();
-      newUser.email    = jsonUser.email;
-      newUser.password = Domain.User.generateHash(jsonUser.password);
+      newUser.email          = jsonUser.email;
       newUser.firstname      = jsonUser.firstname;
       newUser.lastname       = jsonUser.lastname;
       newUser.login_attempts = 1;
       newUser.role           = 'member';
 
-      newUser.save(function(err2) {
-        callback(err2, jwt.sign(newUser, secret));
+      newUser.save(function() {
+        var newUserCredential = new Domain.UserCredential();
+        newUserCredential.user_id = newUser._id;
+        newUserCredential.password_hash = Domain.UserCredential.generateHash(jsonUser.password);
+
+        newUserCredential.save(function(err2) {
+          callback(err2, jwt.sign(newUser, secret));
+        });
       });
     });
 };
@@ -68,9 +52,8 @@ schema.statics.loginUser = function(jsonUser, callback) {
   // callback(Error, Domain.User entity)
   var regex = new RegExp(["^", jsonUser.email, "$"].join(""), "i");
 
-  Domain
-    .User
-    .findOne({'email': regex}, function(err, user) {
+  Domain.User.findOne({'email': regex}, function(err, user) {
+    Domain.UserCredential.findOne({'user_id': (user || {_id: null})._id}, function(err, credential) {
 
       // 1) User not found
       if (err || !user) {
@@ -83,13 +66,11 @@ schema.statics.loginUser = function(jsonUser, callback) {
         return callback('This account has been locked until ' + user.locked_until, null);
 
         // 3) User Found with Correct Password
-      } else if (user.validPassword(jsonUser.password)) {
+      } else if (credential.validPassword(jsonUser.password)) {
 
         return (Domain // this return here is very important!!!
                 .User
                 .update({_id: user._id}, {login_attempts : 1}, function(err2, num) {
-
-                  user.password = null;
 
                   return callback(err2, jwt.sign(user, secret));
                 }));
@@ -118,12 +99,12 @@ schema.statics.loginUser = function(jsonUser, callback) {
                 }));
       }
     });
+  });
 };
 
 schema.statics.ensureAdminUserExists = function(config) {
   var newUser            = new Domain.User();
   newUser.email          = config.admin.email,
-  newUser.password       = Domain.User.generateHash(config.admin.password);
   newUser.firstname      = config.admin.firstname;
   newUser.lastname       = config.admin.lastname;
   newUser.login_attempts = 1;
@@ -135,7 +116,12 @@ schema.statics.ensureAdminUserExists = function(config) {
     .User
     .findOne({'email': regex }, function(err, user) {
       if (!err && !user) {
-	newUser.save();
+        newUser.save(function() {
+          var newUserCredential = new Domain.UserCredential();
+          newUserCredential.user_id = newUser._id;
+          newUserCredential.password_hash = Domain.UserCredential.generateHash(config.admin.password);
+          newUserCredential.save();
+        });
       }
     });
 };

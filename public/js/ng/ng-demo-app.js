@@ -13,7 +13,7 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
 
       .when('/user/login', {templateUrl: '/js/ng/views/user-login.html', controller: 'authController'})
       .when('/user/signup', {templateUrl: '/js/ng/views/user-signup.html', controller: 'authController'})
-      .when('/user/profile', {templateUrl: '/js/ng/views/user-profile.html', controller: 'authController'})
+      .when('/user/profile', {templateUrl: '/js/ng/views/user-extension.html', controller: 'userExtensionController'})
 
 
       .otherwise({redirectTo: '/'});
