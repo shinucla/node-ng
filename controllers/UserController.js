@@ -47,7 +47,9 @@ module.exports = function(app) {
          function(req, res) {
            Domain.UserExtension.findOne({user_id: req.user._id}, function(err, extension) {
              if (null === extension) {
-               extension = new Domain.UserExtension().save(function() {
+               extension = new Domain.UserExtension();
+	       extension.user_id = req.user._id;
+	       extension.save(function() {
                  res.json({result: extension});
                });
              } else {
