@@ -42,10 +42,19 @@
       <p ng-show="loginForm.email.$invalid && !loginForm.email.$pristine"
          class="help-block">Please enter a valid email</P>
     </div>
+    <div class="input-group" style="width: 100%;">
+      <input class="form-control"
+             type="text"
+             placeholder={{userExtension.interests}}
+             name="interests"
+             ng-model="userExtension.interests"
+             ng-minlength="1"
+             ng-maxlength="200">
+    </div>
 
     <hr/>
     <ol class="breadcrumb">
-      <li><a href="">Save</a></li>
+      <li><a href="" ng-click="saveUserExtension()">Save</a></li>
       <li><a href="#/">Home</a></li>
     </ol>
   </form>

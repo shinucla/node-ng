@@ -48,8 +48,8 @@ module.exports = function(app) {
            Domain.UserExtension.findOne({user_id: req.user._id}, function(err, extension) {
              if (null === extension) {
                extension = new Domain.UserExtension();
-	       extension.user_id = req.user._id;
-	       extension.save(function() {
+               extension.user_id = req.user._id;
+               extension.save(function() {
                  res.json({result: extension});
                });
              } else {
@@ -58,17 +58,13 @@ module.exports = function(app) {
            });
          })
 
-  /*
-    .post(app.apirequiredlogin,
-    function(req, res) {
-    var json = req.body.extension;
-
-    Domain.UserExtension.findOne({user_id : req.user._id}, function(err, extension) {
-    extension.interests = json.interests;
-    extension.save();
-    });
-    })
-  */
-  ;
+    .post(app.apiRequiredLogin,
+          function(req, res) {
+            var json = req.body.userExtension;
+	    
+	    Domain.UserExtension.update({user_id: json.user_id}, json, function(err, num) {
+	      res.json({result: json});
+	    });
+          });
 
 };

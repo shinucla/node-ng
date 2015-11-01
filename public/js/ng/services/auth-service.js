@@ -46,7 +46,6 @@ angular.module('ngDemoApp')
     };
 
     authService.logout = function() {
-      console.log('asdfasdfasdfasdf');
       delete $window.localStorage['jwt'];
       $cookieStore.remove('user');
       delete $rootScope.user;
@@ -76,11 +75,9 @@ angular.module('ngDemoApp')
           var base64Url = jwt.split('.')[1];
           var base64 = base64Url.replace('-', '+').replace('_', '/');
 
-          alert('really?');
           return JSON.parse($window.atob(base64));
         }
       } catch (e) {
-        alert('some err');
         try { delete $window.localStorage['jwt']; } catch(e) {}
 
         return null;

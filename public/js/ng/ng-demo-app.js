@@ -20,12 +20,18 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
   }])
 
   .config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push(['$q', '$window', function($q, $window) {
+    $httpProvider.interceptors.push(['$q', '$window','$location', function($q, $window, $location) {
       
       return {
 	'request' : function (config) {
 	  config.headers = config.headers || {};
 	  config.headers.jwt = $window.localStorage['jwt'];
+
+	  if (!config.headers.jwt 
+	      && '/user/signup' !== $location.path()
+	      && '/user/login' !== $location.path()) {
+	    $location.path('/user/login');
+	  }
 
 	  return config;
 	}

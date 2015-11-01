@@ -9,9 +9,16 @@ angular.module('ngDemoApp')
     ApiService
       .get('/user/api/extension')
       .then(function(result) {
-	console.log(result);
-	$scope.userExtension = result;
+	$scope.userExtension = (result || {result: null}).result;
       });
+
+    $scope.saveUserExtension = function() {
+      ApiService
+	.post('/user/api/extension', {userExtension: $scope.userExtension})
+	.then(function(result) {
+	  $scope.userExtension = (result || {result: null}).result;
+	});
+    };
  });
 
 // https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec

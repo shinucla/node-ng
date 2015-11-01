@@ -4,6 +4,7 @@
 // configuration, call angular.module without the array argument.
 angular.module('ngDemoApp')
   .controller('homeController', function($scope,
+					 $location,
                                          ApiService,
                                          ContextService,
                                          AuthService,
@@ -11,6 +12,7 @@ angular.module('ngDemoApp')
     
     $scope.logout = function() {
       AuthService.logout();
+      $location.path('/user/login');
     };
 
     ApiService.get('api/product', function(products) {

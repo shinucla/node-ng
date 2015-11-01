@@ -39,7 +39,7 @@ angular.module('ngDemoApp')
             defer.reject({result: null});
           });
 	
-	return defer.promist;
+	return defer.promise;
       },
 
       put: function(url, data) {

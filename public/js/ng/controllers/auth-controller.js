@@ -10,15 +10,12 @@ angular.module('ngDemoApp')
       AuthService
         .login(credential)
         .then(function(jwt) { // defer.resolve
-	  console.log(' oh yea logged in' );
 	  AuthService.saveJWT(jwt, function(err) {
 	    alert('Your web browser does not support storing settings locally. '
 		  + 'In Safari, the most common cause of  this is using "Private Browsing Mode"');
 	  });
 	  $rootScope.user = AuthService.getUser();
-	  alert($rootScope.user.email);
 	  $location.path('#/home');
-	  
 
         }, function(errMsg) { // defer.reject
 	  AuthService.clearJWT();
