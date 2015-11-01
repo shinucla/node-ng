@@ -11,7 +11,6 @@ var config        = require('./config.js');
 var express       = require('express');
 var http          = require('http');
 var mongoose      = require('mongoose');
-//var passport      = require('passport');
 var flash         = require('connect-flash');
 
 var bodyParser    = require('body-parser');
