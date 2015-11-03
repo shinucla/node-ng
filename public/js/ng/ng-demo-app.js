@@ -20,12 +20,12 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
   }])
 
   .config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push(['$q', '$window','$location', function($q, $window, $location) {
+    $httpProvider.interceptors.push(['$q', '$window','$location', '$rootScope', function($q, $window, $location, $rootScope) {
       
       return {
 	'request' : function (config) {
 	  config.headers = config.headers || {};
-	  config.headers.jwt = $window.localStorage['jwt'];
+	  config.headers.jwt = $window.localStorage['jwt'] || $rootScope.jwt;
 
 	  if (!config.headers.jwt 
 	      && '/user/signup' !== $location.path()
@@ -47,9 +47,10 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
                 $cookies,      // service in module ngCookies
 		$cookieStore,  // service in module ngCookies
 		AuthService ) {
-    console.log('main ng module run!');
-    
+
+    // loading the remembered user
     $rootScope.user = AuthService.getUser();
+
     //$rootScope.userRoles = USER_ROLES;
     //$rootScope.isAuthorized = AuthService.isAuthorized;
 

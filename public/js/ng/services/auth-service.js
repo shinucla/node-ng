@@ -52,6 +52,8 @@ angular.module('ngDemoApp')
     };
 
     authService.saveJWT = function(jwt, callback) {
+      $rootScope.jwt = jwt;
+
       try {
         $window.localStorage['jwt'] = jwt;
       } catch(e) {
@@ -64,12 +66,12 @@ angular.module('ngDemoApp')
     };
 
     authService.getJWT = function() {
-      return $window.localStorage['jwt'];
+      return $window.localStorage['jwt'] || $rootScope.jwt;
     };
 
     authService.getUser = function() {
       try {
-        var jwt = $window.localStorage['jwt'];
+        var jwt = $window.localStorage['jwt'] || $rootScope.jwt;
 
         if (!!jwt && 0 < jwt.indexOf('.')) {
           var base64Url = jwt.split('.')[1];
