@@ -130,4 +130,14 @@ schema.statics.verifyToken = function(jwtToken, callback) {
   jwt.verify(jwtToken, secret, callback); // callback(err, decodedUser)
 };
 
+// return a promise: 
+// Domain.User
+//   .forEmail('...')
+//   .then(function(user) {
+//         ...
+//    });
+schema.statics.forEmail = function(email) {
+  return this.findOne({email: email}).exec();
+};
+
 module.exports  = schema;
