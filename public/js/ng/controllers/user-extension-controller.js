@@ -17,6 +17,7 @@ angular.module('ngDemoApp')
 	.post('/user/api/extension', {userExtension: $scope.userExtension})
 	.then(function(result) {
 	  $scope.userExtension = (result || {result: null}).result;
+	  $location.path('#/home');
 	});
     };
  });

@@ -2,7 +2,7 @@
   <form class="well"
         method="post"
         name="profileForm"
-        ng-submit="updateProfile(userProfile)"
+        ng-submit="saveUserExtension()"
 	novalidate>
 
     <h2>User Profile</h2>
@@ -54,6 +54,7 @@
 
     <hr/>
     <ol class="breadcrumb">
+      <button type="submit" ng-show="false"></button>
       <li><a href="" ng-click="saveUserExtension()">Save</a></li>
       <li><a href="#/">Home</a></li>
     </ol>
