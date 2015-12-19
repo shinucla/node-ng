@@ -88,6 +88,7 @@ angular.module('ngDemoApp')
       if (!$rootScope.user 
 	  || (!forcedToLoad 
 	      && $rootScope.userExtension 
+	      && $rootScope.userExtension.userId 
 	      && $rootScope.userExtension.userId.toString() === $rootScope.user._id.toString())) {
 	console.log('cached');
 	return;
