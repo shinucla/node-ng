@@ -1,37 +1,17 @@
 var mongoose = require('mongoose');
-var AWS = require('aws-sdk');
-
-AWS.config.region = 'us-west-2';
 
 var schema = mongoose.Schema({
-  user_id        : {type: mongoose.Schema.Types.ObjectId},
+  userId         : { type: mongoose.Schema.Types.ObjectId },
   birthday       : Date,
   interests      : String,
-  //avatar       : {mime: String, bin: Buffer}
-  avatar         : String
+  small32x32     : String, //Buffer,
+  medium96x96    : String, //Buffer
 });
 
-// ================================================================
-
-function createBucket(name) {
-  new AWS.S3({params: {Bucket: name}}).createBucket(function() {
-    // done;
-  });
-}
-
-function uploadFileToS3(bucket, path, file) {
-  var fs = require('fs');
-  var zlib = require('zlib');
-
-  var body = fs.createReadStream('bigfile').pipe(zlib.createGzip());
-  var s3obj = new AWS.S3({params: {Bucket: bucket, Key: 'myKey'}});
-  s3obj.upload({Body: body}).
-    on('httpUploadProgress', function(evt) { console.log(evt); }).
-    send(function(err, data) { console.log(err, data) });
-}
-
-
-
-
+schema.methods.setUserId = function(val) { this.userId = val; return this; };
+schema.methods.setBirthday = function(val) { this.birthday = val; return this; };
+schema.methods.setInterests = function(val) { this.interests = val; return this; };
+schema.methods.setSmall32x32 = function(val) { this.small32x32 = val; return this; };
+schema.methods.setMedium96x96 = function(val) { this.medium96x96 = val; return this; };
 
 module.exports = schema;

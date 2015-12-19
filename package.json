@@ -24,6 +24,7 @@
     "passport-http-bearer": "latest",
     "passport-http-oauth": "latest",
     "passport-local": "latest",
-    "serve-favicon": "latest"
+    "serve-favicon": "latest",
+    "aws-sdk": "latest"
   }
 }

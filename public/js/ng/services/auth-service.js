@@ -69,7 +69,7 @@ angular.module('ngDemoApp')
       return $window.localStorage['jwt'] || $rootScope.jwt;
     };
 
-    authService.getUser = function() {
+    authService.loadUser = function() {
       try {
         var jwt = $window.localStorage['jwt'] || $rootScope.jwt;
 
@@ -77,14 +77,29 @@ angular.module('ngDemoApp')
           var base64Url = jwt.split('.')[1];
           var base64 = base64Url.replace('-', '+').replace('_', '/');
 
-          return JSON.parse($window.atob(base64));
+          $rootScope.user = JSON.parse($window.atob(base64));
         }
       } catch (e) {
         try { delete $window.localStorage['jwt']; } catch(e) {}
-
-        return null;
       }
     };
+
+    authService.loadUserExtension = function(forcedToLoad) {
+      if (!$rootScope.user 
+	  || (!forcedToLoad 
+	      && $rootScope.userExtension 
+	      && $rootScope.userExtension.userId.toString() === $rootScope.user._id.toString())) {
+	console.log('cached');
+	return;
+      }
+      
+      ServerService
+        .get('/user/api/extension')
+        .then(function(extension) {
+          $rootScope.userExtension = extension;
+        });
+    };
+
 
     return authService;
   })

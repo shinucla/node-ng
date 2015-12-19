@@ -1,0 +1,17 @@
+<div class="container" style="width: 800px; margin: 160px auto;">
+  <div>
+    <form method="post" ng-submit="uploadPhoto(myFile)">
+      <input type="file"
+             file-model="myFile"
+             accept="image/jpeg,image/png"/>
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+
+  <div ng-repeat="photo in userPhotos">
+    <a href="{{photo.large.s3Url}}">
+      <img ng-src="{{photo.small.s3Url}}" width=96 height=96></img>
+    </a>
+    <a href="" ng-click="deletePhoto(photo)">delete</a>
+  </div>
+</div>

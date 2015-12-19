@@ -7,7 +7,7 @@ angular.module('ngDemoApp')
 // API Service
 // factory is not configurable service
 // in order to be able to inject into app.config, service need to be defined using provider
-  .factory('ApiService', function($http, $q) {
+  .factory('ApiSservice', function($http, $q) {
 
     return {
 

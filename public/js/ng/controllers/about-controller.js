@@ -4,7 +4,6 @@
 // configuration, call angular.module without the array argument.
 angular.module('ngDemoApp')
   .controller('aboutController', function($scope, 
-                                          ApiService, 
                                           ContextService, 
                                           SessionService,
                                           ServerService) {

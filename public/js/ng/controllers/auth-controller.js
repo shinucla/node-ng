@@ -5,7 +5,7 @@
 angular.module('ngDemoApp')
 
   .controller('authController', function($rootScope, $scope, AuthService, ServerService, $location) {
-    
+
     $scope.login = function(credential) {
       AuthService
         .login(credential)
@@ -14,7 +14,10 @@ angular.module('ngDemoApp')
 	    alert('Your web browser does not support storing settings locally. '
 		  + 'In Safari, the most common cause of  this is using "Private Browsing Mode"');
 	  });
-	  $rootScope.user = AuthService.getUser();
+	  
+	  AuthService.loadUser();
+	  AuthService.loadUserExtension();
+	  
 	  $location.path('#/home');
 
         }, function(errMsg) { // defer.reject

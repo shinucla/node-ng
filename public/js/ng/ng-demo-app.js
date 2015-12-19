@@ -14,7 +14,8 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
       .when('/user/login', {templateUrl: '/js/ng/views/user-login.html', controller: 'authController'})
       .when('/user/signup', {templateUrl: '/js/ng/views/user-signup.html', controller: 'authController'})
       .when('/user/profile', {templateUrl: '/js/ng/views/user-extension.html', controller: 'userExtensionController'})
-
+      .when('/user/profile/edit', {templateUrl: '/js/ng/views/user-extension-edit.html', controller: 'userExtensionController'})
+      .when('/user/photo', {templateUrl: '/js/ng/views/user-photo.html', controller: 'userPhotoController'})
 
       .otherwise({redirectTo: '/'});
   }])
@@ -49,7 +50,8 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
 		AuthService ) {
 
     // loading the remembered user
-    $rootScope.user = AuthService.getUser();
+    AuthService.loadUser();
+    AuthService.loadUserExtension();
 
     //$rootScope.userRoles = USER_ROLES;
     //$rootScope.isAuthorized = AuthService.isAuthorized;
@@ -57,7 +59,6 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
     // test loading cookies 'resp'
     var resp = $cookieStore.get('resp');
     if (resp) { console.log('yea!! loading from cookies, the value for resp = ' + resp); }
-    
     
     // test
     ServerService

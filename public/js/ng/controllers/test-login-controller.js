@@ -1,12 +1,11 @@
 'use strict';
 
-// To retrieve a reference to the same module for further 
+// To retrieve a reference to the same module for further
 // configuration, call angular.module without the array argument.
 angular.module('ngDemoApp')
   .controller('testLoginController', function($scope,
                                               $rootScope,
-                                              ApiService, 
-                                              ContextService, 
+                                              ContextService,
                                               AUTH_EVENTS,
                                               AuthService) {
 
@@ -30,7 +29,7 @@ angular.module('ngDemoApp')
         });
     };
 
- });
+  });
 
 
 // https://medium.com/opinionated-angularjs/techniques-for-authentication-in-angularjs-applications-7bbf0346acec

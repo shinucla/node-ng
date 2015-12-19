@@ -7,20 +7,27 @@
 
 // MAIN ENTRY
 //=======================================================================
-var config        = require('./config.js');
+
 var express       = require('express');
 var http          = require('http');
 var mongoose      = require('mongoose');
 var flash         = require('connect-flash');
 
+var favicon       = require('serve-favicon');
 var bodyParser    = require('body-parser');
 var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
 
-
 var google = require('googleapis');
 
 
+// ================================================================
+// Global Variables
+// ================================================================
+config            = require('./config.js');
+NG_DIR            = __dirname + '/public/js/ng';
+APP_ROOT_DIR      = __dirname + '/';
+AwsS3Service      = require('./aws-s3-service.js')(config);
 
 // CONFIG
 //=======================================================================
@@ -28,8 +35,6 @@ var app = express();
 http.createServer(app).listen(config.web.port);  //$sudo PORT=8080 node app.js
 //https.createServer(options, app).listen(443);
 
-
-NG_DIR = __dirname + '/public/js/ng'; 
 
 app.locals.pretty = true;
 app.set('view engine', 'jade');
@@ -44,7 +49,7 @@ app.use(bodyParser.json());
 function series() {
   var callbacks = Array.prototype.slice.call(arguments);
   var args = {};
-  
+
   function next() {
     var callback = callbacks.shift();
     if (callback) {
@@ -52,12 +57,12 @@ function series() {
         args = arguments;
         next();
       });
-    } 
+    }
   }
   next();
 }
 
-series( 
+series(
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: ' + JSON.stringify(args));
     callNextFunc('arg1', 'arg2');
@@ -73,20 +78,19 @@ series(
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: ' + JSON.stringify(args));
     callNextFunc(args[0], args[1]);
-  }, 
+  },
   function(args, callNextFunc) {
-    console.log('series sync-ed function calls with args: ' 
+    console.log('series sync-ed function calls with args: '
                 + args[0] + ', ' + args[1] );
   }
 );
 
 
 
-
 // Domain Models + Data Access Layer
 //=======================================================================
 Domain = require('./domain-models.js');
-Logger = {log : 
+Logger = {log :
           function log(type, message) {
             var log = Domain.Log();
             log.type = type;
@@ -103,6 +107,12 @@ mongoose.connect(config.mongodb.url, function(err) {
   }
 
   Domain.User.ensureAdminUserExists(config);
+
+  //  var setter = (new Domain.TestSetter()
+  //                .setter('name', 'Kevin')
+  //                .setter('age', 12)
+  //                .setter('sex', 'male')
+  //                .save());
 
   console.log('Successfully connected to the mongodb');
 });
@@ -121,8 +131,8 @@ mongoose.connect(config.mongodb.url, function(err) {
 //MIDDLE WARES
 //=======================================================================
 var myMiddleWare = function(req, res, next) {
-    //console.log('Hello world to myMiddleWare!!!');
-    return next();
+  //console.log('Hello world to myMiddleWare!!!');
+  return next();
 };
 
 //RememberMe = require('./remember-me.js');

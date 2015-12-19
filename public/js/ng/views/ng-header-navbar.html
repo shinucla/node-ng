@@ -38,12 +38,21 @@
 
       <!-- navbar right -->
       <ul class="nav navbar-nav navbar-right">
+	<li ng-if="!!user 
+		   && !!userExtension 
+		   && user._id === userExtension.userId 
+		   && !!userExtension.small32x32"
+	    style="padding-top: 10px;">
+	  <img ng-src="data:image/jpeg;base64,{{userExtension.small32x32}}"></img>
+	</li>
+
         <li ng-if="!!user" class="dropdown">
           <a class="dropdown-toggle" href="" data-toggle="dropdown">
 	    {{user.firstname}} {{user.lastname}}<span class="caret"></span>
 	  </a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="#/user/profile">Profile</a></li>
+	    <li><a href="#/user/photo">Photo</a></li>
             <li><a href="" ng-click="logout()">Logout</a></li>
 	  </ul>
 	</li>

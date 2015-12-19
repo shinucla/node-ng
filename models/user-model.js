@@ -127,7 +127,24 @@ schema.statics.ensureAdminUserExists = function(config) {
 };
 
 schema.statics.verifyToken = function(jwtToken, callback) {
-  jwt.verify(jwtToken, secret, callback); // callback(err, decodedUser)
+  // callback(err, decodedUser)
+  // jwt.verify(jwtToken, secret, callback);
+
+  jwt.verify(jwtToken, secret, function(err, decodedUser) {
+    if (err) {
+      callback(err, null);
+    
+    } else {
+      Domain.User.findOne({ _id : decodedUser._id}, function(err, doc) {
+	if (doc) {
+	  callback(null, doc);
+	
+	} else {
+	  callback('invalid user', null);
+	}
+      });
+    }
+  }); 
 };
 
 // return a promise: 

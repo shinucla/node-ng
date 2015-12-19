@@ -1,0 +1,1 @@
+1) user extension avatar should be 32x32 (avatar_small) 96x96 (avatar_medium) 

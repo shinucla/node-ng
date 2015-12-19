@@ -5,7 +5,6 @@
 angular.module('ngDemoApp')
   .controller('ngHeaderNavbarController', function($scope,
 						   $rootScope,
-						   ApiService, 
 						   ContextService, 
 						   AUTH_EVENTS,
 						   AuthService) {
