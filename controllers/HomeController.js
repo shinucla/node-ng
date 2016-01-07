@@ -15,15 +15,24 @@ module.exports = function(app) {
     .route('/home')
     .get(routeToHome);
 
-
   app
-    .route('/home/api/test')
+    .route('/home/api/testRequireLogin')
     .post(app.apiRequiredLogin,
           function(req, res) {
-            res.end(JSON.stringify(
-	      {result: 
-               {data1: [{name: 'a'}, {name: 'b'}],
-		data2: [{age: 23}, {age: 45}]}
-	      }));
+            res.json({ status: 200,
+                       result: { data1: [{ name: 'a' }, { name: 'b' }],
+                                 data2: [{ age: 23 }, { age: 45 }]}
+                     });
           });
+
+  app
+    .route('/home/api/testNotRequireLogin')
+    .post(function(req, res) {
+      res.json({ status: 200,
+                 result: { data1: [{ name: 'a' }, { name: 'b' }],
+                           data2: [{ age: 23 }, { age: 45 }]}
+               });
+    });
+
+
 };

@@ -1,4 +1,5 @@
 <div class="container" style="width: 800px; margin: 160px auto;">
+
   <div>
     <form method="post" ng-submit="uploadPhoto(myFile)">
       <input type="file"
@@ -8,10 +9,48 @@
     </form>
   </div>
 
-  <div ng-repeat="photo in userPhotos">
-    <a href="{{photo.large.s3Url}}">
-      <img ng-src="{{photo.small.s3Url}}" width=96 height=96></img>
-    </a>
-    <a href="" ng-click="deletePhoto(photo)">delete</a>
+  <span id="searchHolder">
+    <label for="galleryQuery">Search:</label>
+    <input id="galleryQuery" ng-model="query">
+  </span>
+  <span id="orderHolder">
+    <label for="orderGallery">Sort by:</label>
+    <select id="orderGallery" ng-model="orderProp">
+      <option value="caption">Alphabetical</option>
+      <option value="date">Newest</option>
+    </select>
+  </span>
+  <span id="zoomHolder">
+    <label for="galleryZoom">Zoom:</label>
+    <input id="galleryZoom" ng-model="zoomSize" type="range" min="1" max="7"/>
+  </span>
+  <div id="imageGallery">
+    <!-- ng-repeat="photo in photos | filter:{caption:query} | orderBy:orderProp" -->
+    <div class="photo-holder"
+         ng-repeat="photo in userPhotos"
+         ng-attr-style="transition: .3s ease;
+                        width: {{thumbWidth}}px;
+                        height: {{thumbWidth}}px;">
+
+      <div class="photo clickable"
+           ng-click="toggleModal(photo)"
+           ng-attr-style="background-image:url({{zoomSize < 5
+                          ? photo.small.s3Url
+                          : photo.small.s3Url}})">
+      </div>
+      <!--div class="caption">{{photo.caption}}</div-->
+      <!--div class="caption">{{photo.date}}</div-->
+    </div>
   </div>
+
+
+  <!-- popup modal -->
+  <modal title="Photo Gallery" visible="showModal">
+    <img class="photo"
+         ng-attr-style="width: 100%;
+                        top: 0px;
+                        position: absolute;"
+         ng-src="{{photo.large.s3Url}}">
+  </modal>
+
 </div>

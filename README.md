@@ -48,3 +48,10 @@ Working with nodemon
 1 sudo npm install -g nodemon
 2 sudo nodemon app.js to start nodemon
 3 sudo PORT=9090 nodemon app.js to start nodemon at port 9090
+
+
+====================================================
+Working with additional tools
+1 sudo apt-get install graphicsmagick
+
+

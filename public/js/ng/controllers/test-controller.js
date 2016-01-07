@@ -3,13 +3,20 @@
 // To retrieve a reference to the same module for further
 // configuration, call angular.module without the array argument.
 angular.module('ngDemoApp')
-  .controller('testController', function($scope,
+  .controller('testController', function($rootScope,
+					 $scope,
                                          ContextService,
                                          AuthService,
                                          ServerService) {
 
+    var testUrl = '/home/api/testNotRequireLogin';
+
+    if ($rootScope.user) {
+      testUrl = '/home/api/testRequireLogin';
+    }
+
     ServerService
-      .exec('/home/api/test', {})
+      .exec(testUrl, {})
       .then(function(result) {
 
         console.log(result);

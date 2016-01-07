@@ -10,7 +10,7 @@ angular.module('ngDemoApp')
         .post('/user/api/extension', { userExtension: $scope.userExtension })
         .then(function(result) {
           AuthService.loadUserExtension(true);
-          $location.path('#/home');
+          $location.path('/home');
         });
     };
 
@@ -29,5 +29,7 @@ angular.module('ngDemoApp')
           });
       }
     };
+
+    AuthService.loadUserExtension(true);
 
   });

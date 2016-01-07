@@ -2,20 +2,20 @@
 // Product Controller
 //
 
-
-
 module.exports = function(app) {
-   app
+  app
     .route('/api/product')
     .get(function(req, res) {
-      res.json([]);
+      res.json({ status: 200,
+                 result: null
+               });
     })
-  
+
     .post(function(req, res) {
       var product = req.body;
-      res.end(JSON.stringify(
-        {success : 'Updated Successfully', status : 200}
-      ));
+      res.json({ status: 200,
+                 result: null
+               });
     })
 
     .delete(function(req, res) {

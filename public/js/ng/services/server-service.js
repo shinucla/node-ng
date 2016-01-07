@@ -41,17 +41,25 @@ angular.module('ngDemoApp')
                                      $q,
                                      $cacheFactory,
                                      $timeout,
-                                     $document) {
+                                     $document,
+                                     ErrorHandleService) {
     var server = {};
 
     function promiseByStatus(response, status, defer) {
       switch (status) {
-      case 200: 
-	defer.resolve(response.result);
+      case 200:
+      case 201:
+	if (response.error) {
+          ErrorHandleService.handleError(response.error);
+          //defer.reject(response.error);
+
+        } else {
+          defer.resolve(response.result);
+        }
         break;
 
-      default: 
-        defer.reject('error');
+      default:
+        req.defer.reject({ code: 'HTTP_BAD_CODE', text: 'http bad code' });
       }
     }
 
@@ -68,7 +76,7 @@ angular.module('ngDemoApp')
           promiseByStatus(response, status, defer);
         })
         .error(function(response, status, headers, config) {
-          defer.reject('error');
+          defer.reject({ code: 'HTTP_REQUEST_FAILED', text: 'http request failed' });
         });
 
       return defer.promise;
@@ -91,17 +99,24 @@ angular.module('ngDemoApp')
         .success(function(response, status, headers, config) {
           switch (status) {
           case 200:
-            req.defer.resolve(req.config.transformResponse
-                              ? req.config.transformResponse(response.result)
-                              : response.result);
+          case 201:
+            if (response.error) {
+              ErrorHandleService.handleError(response.error);
+              //req.defer.reject(response.error);
+
+            } else {
+              req.defer.resolve(req.config.transformResponse
+                                ? req.config.transformResponse(response.result)
+                                : response.result);
+            }
             break;
 
           default:
-            req.defer.reject('error');
+            req.defer.reject({ code: 'HTTP_BAD_CODE', text: 'http bad code' });
           }
         })
         .error(function(response, status, headers, config) {
-          req.defer.reject('error');
+          defer.reject({ code: 'HTTP_REQUEST_FAILED', text: 'http request failed' });
         });
 
       return req.defer.promise;
@@ -120,7 +135,7 @@ angular.module('ngDemoApp')
           promiseByStatus(response, status, defer);
         })
         .error(function(response, status, headers, config) {
-          req.defer.reject('error');
+          defer.reject({ code: 'HTTP_REQUEST_FAILED', text: 'http request failed' });
         });
 
       return defer.promise;

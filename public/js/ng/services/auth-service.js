@@ -4,7 +4,13 @@
 // configuration, call angular.module without the array argument.
 angular.module('ngDemoApp')
 
-  .factory('AuthService', function($rootScope, $http, $q, $cookieStore, ServerService, $window) {
+  .factory('AuthService', function($rootScope,
+                                   $http,
+                                   $q,
+                                   $cookieStore,
+                                   ServerService,
+                                   $window,
+                                   $location) {
     var authService = {};
 
     authService.login = function(credential) {
@@ -47,8 +53,8 @@ angular.module('ngDemoApp')
 
     authService.logout = function() {
       delete $window.localStorage['jwt'];
-      $cookieStore.remove('user');
       delete $rootScope.user;
+      $cookieStore.remove('user');
     };
 
     authService.saveJWT = function(jwt, callback) {
@@ -85,22 +91,21 @@ angular.module('ngDemoApp')
     };
 
     authService.loadUserExtension = function(forcedToLoad) {
-      if (!$rootScope.user 
-	  || (!forcedToLoad 
-	      && $rootScope.userExtension 
-	      && $rootScope.userExtension.userId 
-	      && $rootScope.userExtension.userId.toString() === $rootScope.user._id.toString())) {
-	console.log('cached');
-	return;
+      if (!$rootScope.user
+          || (!forcedToLoad
+              && $rootScope.userExtension
+              && $rootScope.userExtension.userId
+              && $rootScope.userExtension.userId.toString() === $rootScope.user._id.toString())) {
+        console.log('cached');
+        return;
       }
-      
+
       ServerService
         .get('/user/api/extension')
         .then(function(extension) {
           $rootScope.userExtension = extension;
         });
     };
-
 
     return authService;
   })

@@ -13,13 +13,9 @@ module.exports = function(app) {
       var jsonUser  = { 'email': req.body.email,
                         'password': req.body.password };
       Domain.User.loginUser(jsonUser, function(errMsg, jwt) {
-
-        res.end(JSON.stringify(
-          { success : 'Updated Successfully',
-            status : 201,
-            result: { jwt: jwt, errMsg: errMsg }
-          }
-        ));
+        res.json({ status : 201,
+                   result: { jwt: jwt, errMsg: errMsg }
+                 });
       });
     });
 
@@ -32,13 +28,9 @@ module.exports = function(app) {
                         'email': req.body.email,
                         'password': req.body.password };
       Domain.User.signupUser(jsonUser, function(errMsg, jwt) {
-
-        res.end(JSON.stringify(
-          { success : 'Updated Successfully',
-            status : 201,
-            result: { jwt: jwt, errMsg: errMsg }
-          }
-        ));
+        res.json({ status : 201,
+                   result: { jwt: jwt, errMsg: errMsg }
+                 });
       });
     });
 
@@ -52,7 +44,9 @@ module.exports = function(app) {
                new Domain.UserExtension()
                  .setUserId(req.user._id)
                  .save(function(err) {
-                   res.json({ result: { userId: req.user._id } });
+                   res.json({ status: 200,
+                              result: { userId: req.user._id }
+                            });
                  });
 
              } else {
@@ -66,7 +60,9 @@ module.exports = function(app) {
             var json = req.body.userExtension;
 
             Domain.UserExtension.update({ userId: req.user._id }, json, function(err, num) {
-              res.json({ result: json });
+              res.json({ status: 200,
+                         result: json
+                       });
             });
           });
 
@@ -82,12 +78,12 @@ module.exports = function(app) {
               .resize(96, 96)
               .gravity('Center')
               .extent(96, 96)
-              .background('#ffffff')
-              .toBuffer('jpg', function(err, bufLarge) {
+              .transparent('#ffffff')
+              .toBuffer(function(err, bufLarge) {
 
                 gm(bufLarge) // 32 x 32
                   .resize(32, 32)
-                  .toBuffer('jpg', function(err, bufSmall) {
+                  .toBuffer(function(err, bufSmall) {
 
                     fs.unlink(req.file.path);
 
@@ -95,10 +91,9 @@ module.exports = function(app) {
                                                 { small32x32: bufSmall.toString('base64'),
                                                   medium96x96: bufLarge.toString('base64') },
                                                 function(err, num) {
-                                                  res.json({ result: num,
-                                                             success : 'Updated Successfully',
-                                                             status : 200 });
-
+                                                  res.json({ status : 200,
+                                                             result: num
+                                                           });
                                                 });
                   });
               });
@@ -109,7 +104,9 @@ module.exports = function(app) {
     .get(app.apiRequiredLogin,
          function(req, res) {
            Domain.UserPhoto.find({ userId: req.user._id }, function(err, docs) {
-             res.json({ result: docs });
+             res.json({ status: 200,
+                        result: docs
+                      });
            });
          })
 
@@ -145,8 +142,9 @@ module.exports = function(app) {
                           .setDescription(req.file.originalname)
                           .save(function(err) {
 
-                            res.json({ result: 'good' });
-
+                            res.json({ status: 200,
+                                       result: null
+                                     });
                           });
                       });
                     });
@@ -167,10 +165,13 @@ module.exports = function(app) {
                   Domain.UserPhoto
                     .remove({ _id: id }, function(err, num) {
 
-                      res.json({ result: err });
-
+                      res.json({ status: 200,
+                                 result: null
+                               });
                     });
                 });
               });
             });
+
+
 };

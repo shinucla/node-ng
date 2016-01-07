@@ -31,7 +31,8 @@ angular.module('ngDemoApp')
         .signup(userData)
         .then(function(jwt) { // defer.resolve
 	  AuthService.saveJWT(jwt);
-	  $rootScope.user = AuthService.getUser();
+	  AuthService.loadUser();
+
 	  $location.path('#/home');
 
 	}, function(errMsg) { // defer.reject

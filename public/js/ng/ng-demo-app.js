@@ -9,7 +9,7 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
       .when('/home', {templateUrl: '/js/ng/views/home.html'})
       .when('/home/about', {templateUrl: '/js/ng/views/home-about.html', controller: 'aboutController'})
       .when('/home/requireLogin', {templateUrl: '/js/ng/views/home-require-login.html', controller: 'testController'})
-      .when('/home/notRequireLogin', {templateUrl: '/js/ng/views/home-not-require-login.html', controller: 'testController'})
+      .when('/home/notRequireLogin', {templateUrl: '/js/ng/views/home-require-login.html', controller: 'testController'})
 
       .when('/user/login', {templateUrl: '/js/ng/views/user-login.html', controller: 'authController'})
       .when('/user/signup', {templateUrl: '/js/ng/views/user-signup.html', controller: 'authController'})

@@ -7,16 +7,9 @@ module.exports = function(app) {
     .route('/serverservice/testexec')
     .post(function(req, res) {
       var data = req.body;
-      res.json({ success : 'Updated Successfully',
-                 status : 200,
-                 result: { text: 'test exec success!!' } });
-
-      //res.end(JSON.stringify(
-      //  {success : 'Updated Successfully',
-      //   status : 200,
-      //   result: {text: 'test exec success!!'}
-      //  }
-      //));
+      res.json({ status : 200,
+                 result: { text: 'test exec success!!' }
+               });
     });
 
   app
@@ -29,11 +22,11 @@ module.exports = function(app) {
       //
       // console.log(req.query);
 
-      res.json({ success : 'get ok',
-                 status : 200,
-                 result: [{ name: 'product 1'},
-                          { name: 'product 2'},
-                          { name: 'product 3'}] });
+      res.json({ status : 200,
+                 result: [{ name: 'product 1' },
+                          { name: 'product 2' },
+                          { name: 'product 3' }]
+               });
     });
 
 };
