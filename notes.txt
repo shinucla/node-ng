@@ -72,5 +72,45 @@ Retry the operation
 Blow up. 
 Log the error — and do nothing else
 
+// ================================================================
 
+Planets["Earth"].Inhabitants.OfType<Human>().....
+
+[Naming] : http://source-code-wordle.de/NounsVariables.html
+
+attribute
+type
+helper
+collection
+converter
+handler
+info
+provider
+exception
+service
+element
+manager
+node
+option
+factory
+context
+item
+designer
+base
+editor
+
+Coordinator
+Builder
+Writer
+Reader
+Handler
+Container
+Protocol
+Target
+Converter
+Controller
+View
+Factory
+Entity
+Bucket
 

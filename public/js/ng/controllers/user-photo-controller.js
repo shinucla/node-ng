@@ -4,13 +4,23 @@
 // configuration, call angular.module without the array argument.
 var app = angular.module('ngDemoApp');
 
+// ================================================================
+
 app.controller('userPhotoController', function($rootScope, $scope, AuthService, ServerService, $location) {
+  $scope.clonedPhoto = null;
+  $scope.showAlbum = false;
+  $scope.showUploadPreview = false;
+  $scope.previewSrc = null;
+  $scope.previewFile = null;
 
   $scope.loadUserPhotos = function() {
     ServerService
       .get('/user/api/photo')
       .then(function(photos) {
         $scope.userPhotos = photos;
+        for (var i = 0; i < $scope.userPhotos.length; ++i) {
+          $scope.userPhotos[i].index = i;
+        }
       });
   };
 
@@ -26,6 +36,7 @@ app.controller('userPhotoController', function($rootScope, $scope, AuthService, 
         .uploadFile('/user/api/photo', {name: 'imageFile', file: file})
         .then(function(result) {
           $scope.loadUserPhotos();
+          $scope.showUploadPreview = false;
         });
     }
   };
@@ -40,51 +51,70 @@ app.controller('userPhotoController', function($rootScope, $scope, AuthService, 
       });
   };
 
-
-  // ================================================================
-  $scope.zoomSize = 5;
-  $scope.getWidth = function() {
-    return document.getElementById('imageGallery').offsetWidth;
+  $scope.updatePhoto = function(photo) {
+    var oriPhoto = $scope.userPhotos[photo.index];
+    if (oriPhoto.description !== photo.description
+        || oriPhoto.title !== photo.title) {
+      ServerService.put('/user/api/photo', photo);
+      $scope.userPhotos[photo.index] = photo;
+    }
   };
-  $scope.$watch($scope.getWidth, function(newValue, oldValue) {
-    $scope.thumbWidth = newValue / (17 - ($scope.zoomSize * 2));
-  });
-  $scope.$watch('zoomSize', function(newValue) {
-    $scope.thumbWidth = $scope.getWidth() / (17 - (newValue * 2));
-  });
-  window.onresize = function(){
-    $scope.$apply();
+
+  $scope.toggleAlbumModal = function(photo){
+    $scope.showAlbum = !$scope.showAlbum;
+    $scope.clonedPhoto = _.clone(photo);
   };
-  $scope.query = '';
-  $scope.orderProp = 'caption'
-  // ================================================================
 
+  $scope.showPrevPhoto = function(photo) {
+    var i = photo.index - 1;
+    $scope.clonedPhoto = _.clone(i < 0
+                                 ? photo
+                                 : $scope.userPhotos[i]);
+  }
 
+  $scope.showNextPhoto = function(photo) {
+    var i = photo.index + 1;
+    $scope.clonedPhoto = _.clone($scope.userPhotos.length <= i
+                                 ? photo
+                                 : $scope.userPhotos[i]);
+  }
+
+  $scope.toggleUploadPreviewModal = function(file){
+    $scope.previewSrc = null;
+    $scope.previewFile = file;
+
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      $scope.previewSrc = e.target.result;
+    }
+
+    reader.readAsDataURL(file);
+
+    $scope.showUploadPreview = !$scope.showUploadPreview;
+  };
 
 
 
   $scope.loadUserPhotos();
-  $scope.showModal = false;
-  $scope.toggleModal = function(photo){
-    $scope.showModal = !$scope.showModal;
-    $scope.photo = photo;
-  };
 
 });
 
+// ================================================================
+
 app.directive('modal', function() {
 
-  return { template: '<div class="modal fade">' +
-           '<div class="modal-dialog">' +
-           '<div class="modal-content">' +
-           '<div class="modal-header">' +
-           '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-           '<h4 class="modal-title">{{ title }}</h4>' +
-           '</div>' +
-           '<div class="modal-body" ng-transclude></div>' +
-           '</div>' +
-           '</div>' +
-           '</div>',
+  return { template: ('<div class="modal fade">' +
+                      '  <div class="modal-dialog">' +
+                      '    <div class="modal-content">' +
+                      '      <div class="modal-header">' +
+                      '        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                      '        <h4 class="modal-title">{{ title }}</h4>' +
+                      '      </div>' +
+                      '      <div class="modal-body" ng-transclude></div>' +
+                      '    </div>' +
+                      '  </div>' +
+                      '</div>'),
            restrict: 'E',
            transclude: true,
            replace:true,
@@ -114,4 +144,21 @@ app.directive('modal', function() {
          };
 });
 
+// ================================================================
+
+app.directive('customOnChange', ['$parse', function ($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var onChangeFunc = scope.$eval(attrs.customOnChange);
+
+      element.bind('change', function(){
+        scope.$apply(function() {
+          var file = element[0].files[0];
+          onChangeFunc(file);
+        });
+      });
+    }
+  };
+}]);
 

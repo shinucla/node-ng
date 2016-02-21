@@ -14,6 +14,10 @@ angular.module('ngDemoApp')
         });
     };
 
+    $scope.testShit = function() {
+      alert('fuck');
+    };
+
     $scope.uploadUserAvatarImage = function(file) {
       if (!file) {
         alert('please select an image of 250x200');

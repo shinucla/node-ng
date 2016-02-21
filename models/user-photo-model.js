@@ -5,7 +5,8 @@ var schema = mongoose.Schema({
   small            : { s3Key : String, s3Url : String },
   large            : { s3Key : String, s3Url : String },
   whenCreated      : Date,
-  originalFileName : String,
+  originalName     : String,
+  title            : String,
   description      : String,
 });
 
@@ -14,6 +15,7 @@ schema.methods.setSmall = function(key, url) { this.small.s3Key = key; this.smal
 schema.methods.setLarge = function(key, url) { this.large.s3Key = key; this.large.s3Url = url; return this; };
 schema.methods.setWhenCreated = function(val) { this.whenCreated = val; return this; };
 schema.methods.setOriginalName = function(val) { this.originalName = val; return this; };
+schema.methods.setTitle = function(val) { this.title = val; return this; };
 schema.methods.setDescription = function(val) { this.description = val; return this; };
 
 module.exports = schema;

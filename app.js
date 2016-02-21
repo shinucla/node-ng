@@ -100,48 +100,56 @@ Logger = {log :
          };
 
 //mongoose.connect('192.168.2.10:27017/db', function(err) {
-mongoose.connect(config.mongodb.url, function(err) {
-  if (err) {
-    console.log('Cannot connect to mongodb');
-    process.exit(1);
-  }
+//mongoose.connect(config.mongodb.url, function(err) {
+mongoose.connect(config.mongodb.url, 
+		 { server: { keepAlive: 1,
+			     socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
+			     poolSize: config.mongodb.dbPoolSize },
+		   
+		   replset: { keepAlive: 1,
+			      socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
+			      poolSize: config.mongodb.dbPoolSize }
+		 },
+		 function(err) {
+		     if (err) {
+			 console.log('Cannot connect to mongodb');
+			 process.exit(1);
+		     }
+		     
+		     
+		     
+		     Domain.User.ensureAdminUserExists(config);
+		     
+		     require('./router.js')(app);
+		     console.log('Server Started ...');
+		     
+		     //  var setter = (new Domain.TestSetter()
+		     //                .setter('name', 'Kevin')
+		     //                .setter('age', 12)
+		     //                .setter('sex', 'male')
+		     //                .save());
+		     
+		 });
 
-  Domain.User.ensureAdminUserExists(config);
-
-  //  var setter = (new Domain.TestSetter()
-  //                .setter('name', 'Kevin')
-  //                .setter('age', 12)
-  //                .setter('sex', 'male')
-  //                .save());
-
-  console.log('Successfully connected to the mongodb');
+// If the Node process ends, close the Mongoose connection 
+process.on('SIGINT', function() {
+    mongoose.connection.close(function() {
+	console.log('close mongo connection');
+	process.exit(0);
+    });
 });
 
+// When successfully connected
+mongoose.connection.on('connected', function () {  
+    console.log('db connected');
+}); 
 
+// When the connection is disconnected
+mongoose.connection.on('disconnected', function () {  
+    console.log('db disconnected'); 
+});
 
-// AUTHENTICATION
-//=======================================================================
-//app.use(passport.initialize());
-//app.use(passport.session());
-//app.use(flash());
-//require('./config-passport.js')(passport);
-
-
-
-//MIDDLE WARES
-//=======================================================================
-var myMiddleWare = function(req, res, next) {
-  //console.log('Hello world to myMiddleWare!!!');
-  return next();
-};
-
-//RememberMe = require('./remember-me.js');
-//app.use(RememberMe.LoadRememberMe); // check UserController.js setRememberMe function
-app.use(myMiddleWare);
-
-
-
-
-// CONTROLLERS
-//=======================================================================
-require('./router.js')(app);
+// If the connection throws an error
+mongoose.connection.on('error',function (err) {  
+    console.log('db error: ' + err);
+}); 

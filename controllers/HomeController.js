@@ -35,4 +35,10 @@ module.exports = function(app) {
     });
 
 
+  app
+    .route('/test')
+    .get(function(req, res) {
+      res.sendFile(NG_DIR + '/views/test.html');
+    });
+
 };

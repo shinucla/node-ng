@@ -84,6 +84,25 @@ angular.module('ngDemoApp')
 
     // ================================================================
 
+    server.put = function(url, data, config, defer) {
+      if (!angular.isDefined(defer)) {
+        defer = $q.defer();
+      }
+
+      $http
+        .put(url, data, config)
+        .success(function(response, status, headers, config) {
+          promiseByStatus(response, status, defer);
+        })
+        .error(function(response, status, headers, config) {
+          defer.reject({ code: 'HTTP_REQUEST_FAILED', text: 'http request failed' });
+        });
+
+      return defer.promise;
+    };
+
+    // ================================================================
+
     server.post = function(url, data, config, defer) {
       if (!angular.isDefined(defer)) {
         defer = $q.defer();

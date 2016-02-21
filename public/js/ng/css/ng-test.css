@@ -26,8 +26,8 @@
 
 .photo-description {
     position: absolute;
-    height: 100px;
-    bottom: 20px;
+    height: 70px;
+    bottom: 20px;    
     left: 20px;
     right: 20px;
     padding-left: 5px;
@@ -78,5 +78,24 @@
     height: 100% !important;
     opacity: 0 !important;
     overflow: hidden !important;
+}
+
+.edit-in-place span {
+    cursor: pointer;
+}
+.edit-in-place textarea {
+    display: none;
+    color: black;
+    width: 100%;
+}
+.edit-in-place.active span {
+    display: none;
+}
+.edit-in-place.active textarea {
+    display: inline-block;
+}
+
+.test {
+    width: 70%;
 }
 

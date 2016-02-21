@@ -152,6 +152,16 @@ module.exports = function(app) {
               });
           })
 
+    .put(app.apiRequiredLogin,
+         function(req, res) {
+           Domain.UserPhoto.update({ _id: req.body._id },
+                                   { description: req.body.description,
+                                     title: req.body.title },
+                                   function(err, num) {
+                                     res.json({ status: 200, result: null });
+                                   });
+         })
+
     .delete(app.apiRequiredLogin,
             function(req, res) {
               var keySmall = req.query.keySmall;
