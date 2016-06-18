@@ -58,6 +58,7 @@ Logger = {log :
           }
          };
 
+var connection_count = 0;
 function connectToDatabase() {
   //mongoose.connect('192.168.2.10:27017/db', function(err) {
   //mongoose.connect(config.mongodb.url, function(err) {
@@ -73,7 +74,13 @@ function connectToDatabase() {
                    function(err) {
                      if (err) {
                        console.log('Cannot connect to mongodb');
-                       process.exit(1);
+		       
+		       if (connection_count < 50) {
+			 reConnectToDatabase();
+
+		       } else {
+			 process.exit(1);
+		       }
                      }
 
 
@@ -91,6 +98,14 @@ function connectToDatabase() {
 
                    });
 }
+
+function reConnectToDatabase() {
+  console.log('trying to reconnect to db in 10 sec.');
+
+  ++connection_count;
+  setTimeout(connectToDatabase, 10000);
+}
+
 
 function series() {
   var callbacks = Array.prototype.slice.call(arguments);
@@ -154,6 +169,8 @@ mongoose.connection.on('connected', function () {
 // When the connection is disconnected
 mongoose.connection.on('disconnected', function () {
   console.log('db disconnected');
+
+  connection_count = 0;
   connectToDatabase();
 });
 
