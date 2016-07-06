@@ -20,7 +20,6 @@ var session       = require('express-session');
 
 var google = require('googleapis');
 
-
 // ================================================================
 // Global Variables
 // ================================================================
@@ -32,8 +31,8 @@ AwsS3Service      = require('./aws-s3-service.js')(config);
 // CONFIG
 //=======================================================================
 var app = express();
-http.createServer(app).listen(config.web.port);  //$sudo PORT=8080 node app.js
-//https.createServer(options, app).listen(443);
+http.createServer(app).listen(config.web.port);  // $sudo PORT=8080 node app.js
+//https.createServer(options, app).listen(443);  // starts https server
 
 
 app.locals.pretty = true;
