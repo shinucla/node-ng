@@ -126,23 +126,23 @@ function series() {
 series(
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: ' + JSON.stringify(args));
-    callNextFunc('arg1', 'arg2');
+    callNextFunc('arg1');
   },
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: ' + JSON.stringify(args));
-    callNextFunc(args[0], args[1]);
+    callNextFunc(args[0], 'new arg 2');
   },
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: ' + JSON.stringify(args));
-    callNextFunc(args[0], args[1]);
+    callNextFunc(args[0], args[1], 'new arg 3');
   },
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: ' + JSON.stringify(args));
-    callNextFunc(args[0], args[1]);
+    callNextFunc(args[0], args[1], args[2], 'new arg 4');
   },
   function(args, callNextFunc) {
     console.log('series sync-ed function calls with args: '
-                + args[0] + ', ' + args[1] );
+                + args[0] + ', ' + args[3] );
   }
 );
 
