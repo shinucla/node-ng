@@ -48,13 +48,13 @@ app.use(bodyParser.json());
 // Domain Models + Data Access Layer
 //=======================================================================
 Domain = require('./domain-models.js');
-Logger = {log :
-          function log(type, message) {
-            var log = Domain.Log();
-            log.type = type;
-            log.message = message;
-            log.save();
-          }
+Logger = { log :
+           function log(type, message) {
+             var log = Domain.Log();
+             log.type = type;
+             log.message = message;
+             log.save();
+           }
          };
 
 var connection_count = 0;
@@ -73,13 +73,13 @@ function connectToDatabase() {
                    function(err) {
                      if (err) {
                        console.log('Cannot connect to mongodb');
-		       
-		       if (connection_count < 50) {
-			 reConnectToDatabase();
 
-		       } else {
-			 process.exit(1);
-		       }
+                       if (connection_count < 50) {
+                         reConnectToDatabase();
+
+                       } else {
+                         process.exit(1);
+                       }
                      }
 
 
