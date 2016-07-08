@@ -25,6 +25,7 @@
     "passport-http-oauth": "latest",
     "passport-local": "latest",
     "serve-favicon": "latest",
-    "aws-sdk": "latest"
+    "aws-sdk": "latest",
+    "jsonwebtoken": "latest"
   }
 }
