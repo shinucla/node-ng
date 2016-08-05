@@ -63,6 +63,7 @@ function connectToDatabase() {
   //mongoose.connect(config.mongodb.url, function(err) {
   mongoose.connect(config.mongodb.url,
                    { server: { keepAlive: 1,
+			       reconnectTries: Number.MAX_VALUE,
                                socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
                                poolSize: config.mongodb.dbPoolSize },
 

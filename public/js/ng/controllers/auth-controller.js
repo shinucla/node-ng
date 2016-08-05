@@ -17,6 +17,7 @@ angular.module('ngDemoApp')
 	  
 	  AuthService.loadUser();
 	  AuthService.loadUserExtension();
+	  console.log($rootScope.user);
 	  
 	  $location.path('#/home');
 

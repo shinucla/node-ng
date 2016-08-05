@@ -135,7 +135,7 @@ schema.statics.verifyToken = function(jwtToken, callback) {
       callback(err, null);
     
     } else {
-      Domain.User.findOne({ _id : decodedUser._id}, function(err, doc) {
+      Domain.User.findOne({ _id : decodedUser._doc._id}, function(err, doc) {
 	if (doc) {
 	  callback(null, doc);
 	
