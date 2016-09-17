@@ -8,17 +8,18 @@
 // MAIN ENTRY
 //=======================================================================
 
-var express       = require('express');
-var http          = require('http');
-var mongoose      = require('mongoose');
-var flash         = require('connect-flash');
+var google            = require('googleapis');
 
-var favicon       = require('serve-favicon');
-var bodyParser    = require('body-parser');
-var cookieParser  = require('cookie-parser');
-var session       = require('express-session');
+var express           = require('express');
+var http              = require('http');
+var mongoose          = require('mongoose');
+var flash             = require('connect-flash');
 
-var google = require('googleapis');
+var favicon           = require('serve-favicon');
+var bodyParser        = require('body-parser');
+var cookieParser      = require('cookie-parser');
+var session           = require('express-session');
+var MongoSessionStore = require('connect-mongo')(session);
 
 // ================================================================
 // Global Variables
@@ -27,51 +28,83 @@ config            = require('./config.js');
 NG_DIR            = __dirname + '/public/js/ng';
 APP_ROOT_DIR      = __dirname + '/';
 AwsS3Service      = require('./aws-s3-service.js')(config);
+Logger            = { log :
+                      function log(type, message) {
+                        var log = Domain.Log();
+                        log.type = type;
+                        log.message = message;
+                        log.save();
+                      }
+                    };
 
-// CONFIG
-//=======================================================================
+
+// Start the database connection
+Domain = require('./domain-models.js'); // DAL
+connectToDatabase();
+
 var app = express();
-http.createServer(app).listen(config.web.port);  // $sudo PORT=8080 node app.js
-//https.createServer(options, app).listen(443);  // starts https server
-
-
 app.locals.pretty = true;
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
 app.use(express.static(__dirname + '/public')); //js css img fonts...
 app.use(cookieParser());
-app.use(session( {secret: 'my_super_secrete_word', resave: true, saveUninitialized: true } ));
+app.use(session({ secret: 'my_super_secrete_word',
+                  resave: false,
+                  saveUninitialized: false,
+                  store: new MongoSessionStore({ mongooseConnection: mongoose.connection }),
+                  cookie: { maxAge: 180 * 60 * 1000 }
+                }));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(function(req, res, next) {
+  //res.locals.login = req.isAuthenticated; // TBI
+  res.locals.session = req.session;
+  next();
+});
 
-// Domain Models + Data Access Layer
-//=======================================================================
-Domain = require('./domain-models.js');
-Logger = { log :
-           function log(type, message) {
-             var log = Domain.Log();
-             log.type = type;
-             log.message = message;
-             log.save();
-           }
-         };
+
+http.createServer(app).listen(config.web.port);  // $sudo PORT=8080 node app.js
+//https.createServer(options, app).listen(443);  // starts https server
+
+
+// If the Node process ends, close the Mongoose connection
+var really_want_to_exit = false;
+process.on('SIGINT', function() {
+  mongoose.connection.close(function() {
+    console.log('close mongo connection');
+    really_want_to_exit = true;
+    process.exit(0);
+  });
+});
+
+mongoose.connection.on('connected', function () { // When successfully connected
+  console.log('db connected');
+});
+
+mongoose.connection.on('disconnected', function () { // When the connection is disconnected
+  console.log('db disconnected');
+
+  connection_count = 0;
+  connectToDatabase();
+});
+
+mongoose.connection.on('error',function (err) { // If the connection throws an error
+  console.log('db error: ' + err);
+});
 
 var connection_count = 0;
 function connectToDatabase() {
-  //mongoose.connect('192.168.2.10:27017/db', function(err) {
-  //mongoose.connect(config.mongodb.url, function(err) {
   mongoose.connect(config.mongodb.url,
                    { server: { keepAlive: 1,
-			       reconnectTries: Number.MAX_VALUE,
+                               reconnectTries: Number.MAX_VALUE,
                                socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
                                poolSize: config.mongodb.dbPoolSize },
-
                      replset: { keepAlive: 1,
                                 socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
                                 poolSize: config.mongodb.dbPoolSize }
                    },
-                   function(err) {
+		   function(err) {
                      if (err) {
                        console.log('Cannot connect to mongodb');
 
@@ -83,8 +116,7 @@ function connectToDatabase() {
                        }
                      }
 
-
-
+                     // post connection tasks:
                      Domain.User.ensureAdminUserExists(config);
 
                      require('./router.js')(app);
@@ -95,7 +127,6 @@ function connectToDatabase() {
                      //                .setter('age', 12)
                      //                .setter('sex', 'male')
                      //                .save());
-
                    });
 }
 
@@ -105,7 +136,6 @@ function reConnectToDatabase() {
   ++connection_count;
   setTimeout(connectToDatabase, 10000);
 }
-
 
 function series() {
   var callbacks = Array.prototype.slice.call(arguments);
@@ -145,36 +175,3 @@ series(
                 + args[0] + ', ' + args[3] );
   }
 );
-
-
-// Start the database connection
-connectToDatabase();
-
-
-// If the Node process ends, close the Mongoose connection
-var really_want_to_exit = false;
-process.on('SIGINT', function() {
-  mongoose.connection.close(function() {
-    console.log('close mongo connection');
-    really_want_to_exit = true;
-    process.exit(0);
-  });
-});
-
-// When successfully connected
-mongoose.connection.on('connected', function () {
-  console.log('db connected');
-});
-
-// When the connection is disconnected
-mongoose.connection.on('disconnected', function () {
-  console.log('db disconnected');
-
-  connection_count = 0;
-  connectToDatabase();
-});
-
-// If the connection throws an error
-mongoose.connection.on('error',function (err) {
-  console.log('db error: ' + err);
-});

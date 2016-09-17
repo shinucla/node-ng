@@ -7,3 +7,6 @@ module.exports.UserCredential = mongoose.model('user_credential', require('./mod
 module.exports.UserExtension  = mongoose.model('user_extension',  require('./models/user-extension-model.js'));
 module.exports.UserPhoto      = mongoose.model('user_photo',      require('./models/user-photo-model.js'));
 module.exports.TestSetter     = mongoose.model('test_setter',     require('./models/test-setter-model.js'));
+module.exports.Product        = mongoose.model('product',         require('./models/product-model.js'));
+
+module.exports.ShoppingCart   = require('./models/shopping-cart.js');
