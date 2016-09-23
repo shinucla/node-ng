@@ -10,14 +10,14 @@ module.exports = function(app) {
     .route('/oauth/api/facebook')
 
     .get(function(req, res) {
-      var authToken = req.params.code;
+      var authToken = req.query.code;
       var redirectUri = 'http://aws101.ddns.net/oauth/api/facebook';
-
+      
       if (!authToken) {
-	return res.redirect('https://www.facebook.com/dialog/oauth'
-			    + '?client_id=' + facebook.appId
-			    + '&scope=ads_management'
-			    + '&redirect_uri=' + redirectUri);
+	res.redirect('https://www.facebook.com/dialog/oauth'
+		     + '?client_id=' + facebook.appId
+		     + '&scope=ads_management,business_management'
+		     + '&redirect_uri=' + redirectUri);
       } else {
 	request.post('https://graph.facebook.com/v2.5/oauth/access_token',
 		     { json: true,
@@ -25,17 +25,17 @@ module.exports = function(app) {
 			       client_secret: facebook.appSecret,
 			       code: authToken,
 			       redirect_uri: redirectUri }},
-		     function(err, res, body) {
+		     function(err, resp, body) {
 		       var accessToken = body.access_token;
-
 		       request.post('https://graph.facebook.com/v2.5/oauth/access_token',
 				    { json: true,
 				      body: { client_id: facebook.appId,
 					      client_secret: facebook.appSecret,
 					      grant_type: 'fb_exchange_token',
 					      fb_exchange_token: accessToken }},
-				    function(err, res, body) {
+				    function(err, resp, body) {
 				      console.log(body.access_token);
+				      res.json({ code: body.access_token });
 				    });
 		     });
       }
