@@ -4,6 +4,7 @@
   "author": "shin",
   "main": "app.js",
   "dependencies": {
+    "aws-sdk": "latest",
     "bcrypt-nodejs": "latest",
     "body-parser": "latest",
     "connect-flash": "latest",
@@ -16,6 +17,7 @@
     "gm": "latest",
     "googleapis": "^2.1.5",
     "jade": "latest",
+    "jsonwebtoken": "latest",
     "mongoose": "latest",
     "multer": "latest",
     "node-geocoder": "latest",
@@ -25,8 +27,7 @@
     "passport-http-bearer": "latest",
     "passport-http-oauth": "latest",
     "passport-local": "latest",
-    "serve-favicon": "latest",
-    "aws-sdk": "latest",
-    "jsonwebtoken": "latest"
+    "request": "^2.75.0",
+    "serve-favicon": "latest"
   }
 }

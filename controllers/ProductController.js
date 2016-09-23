@@ -26,9 +26,9 @@ module.exports = function(app) {
 
 	cart.add(doc, doc.id);
 	req.session.cart = cart;
-	console.log(req.session.cart);
+
 	res.json({ status: 200,
-		   result: {}
+		   result: { cart: cart }
 		 });
       });
     })

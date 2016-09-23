@@ -58,8 +58,8 @@ app.use(session({ secret: 'my_super_secrete_word',
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
-  //res.locals.login = req.isAuthenticated; // TBI
-  res.locals.session = req.session;
+  // res.locals.login = req.isAuthenticated; // ------- for passing to view engine
+  // res.locals.session = req.session; ---------------- for passing to view engine
   next();
 });
 

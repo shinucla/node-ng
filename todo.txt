@@ -1,1 +1,24 @@
-1) user extension avatar should be 32x32 (avatar_small) 96x96 (avatar_medium) 
+
+update to angular 2.0
+
+
+
+
+1) user extension avatar should be 32x32 (avatar_small) 96x96 (avatar_medium)
+
+
+================================================================
+Dating App
+================================================================
+
+
+domain models:
+  user
+  user_auth
+  user_profile
+
+  connection
+
+  
+
+2) access res.locals.session = req.session; from angular

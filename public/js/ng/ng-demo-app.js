@@ -17,7 +17,8 @@ angular.module('ngDemoApp', ['ngCookies', 'ngRoute'])
       .when('/user/profile/edit', { templateUrl: '/js/ng/views/user-extension-edit.html', controller: 'userExtensionController' })
       .when('/user/photo', { templateUrl: '/js/ng/views/user-photo.html', controller: 'userPhotoController' })
 
-      .when('/product', { templateUrl: '/js/ng/views/product.html', controller: 'productController' })
+      //.when('/product', { templateUrl: '/js/ng/views/product.html', controller: 'productController' })
+      .when('/product', { template: '<ng-product />' })
 
       .otherwise({redirectTo: '/'});
   }])
