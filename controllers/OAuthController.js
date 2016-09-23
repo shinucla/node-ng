@@ -11,7 +11,7 @@ module.exports = function(app) {
 
     .get(function(req, res) {
       var authToken = req.params.code;
-      var redirectUri = 'http://rpi101.ddns.net/oauth/api/facebook';
+      var redirectUri = 'http://aws101.ddns.net/oauth/api/facebook';
 
       if (!authToken) {
 	return res.redirect('https://www.facebook.com/dialog/oauth'
