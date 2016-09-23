@@ -48,4 +48,5 @@ module.exports = function(app) {
   require('./controllers/UserController')(app);
   require('./controllers/ProductController')(app);
   require('./controllers/ServerServiceController')(app);
+  require('./controllers/OAuthController')(app);
 }
