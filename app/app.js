@@ -24,10 +24,8 @@ var MongoSessionStore = require('connect-mongo')(session);
 // ================================================================
 // Global Variables
 // ================================================================
-config            = require('./config.js');
-NG_DIR            = __dirname + '/public/js/ng';
-APP_ROOT_DIR      = __dirname + '/';
-AwsS3Service      = require('./aws-s3-service.js')(config);
+Config            = require('../config.js');
+AwsS3Service      = require('./aws-s3-service.js')(Config);
 Logger            = { log :
                       function log(type, message) {
                         var log = Domain.Log();
@@ -47,7 +45,7 @@ app.locals.pretty = true;
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
-app.use(express.static(__dirname + '/public')); //js css img fonts...
+app.use(express.static(Config.rs_dir)); // public resources: js css img fonts...
 app.use(cookieParser());
 app.use(session({ secret: 'my_super_secrete_word',
                   resave: false,
@@ -64,7 +62,7 @@ app.use(function(req, res, next) {
 });
 
 
-http.createServer(app).listen(config.web.port);  // $sudo PORT=8080 node app.js
+http.createServer(app).listen(Config.web.port);  // $sudo PORT=8080 node app.js
 //https.createServer(options, app).listen(443);  // starts https server
 
 
@@ -95,14 +93,14 @@ mongoose.connection.on('error',function (err) { // If the connection throws an e
 
 var connection_count = 0;
 function connectToDatabase() {
-  mongoose.connect(config.mongodb.url,
+  mongoose.connect(Config.mongodb.url,
                    { server: { keepAlive: 1,
                                reconnectTries: Number.MAX_VALUE,
-                               socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
-                               poolSize: config.mongodb.dbPoolSize },
+                               socketOptions: { connectTimeoutMS: Config.mongodb.dbTimeout },
+                               poolSize: Config.mongodb.dbPoolSize },
                      replset: { keepAlive: 1,
-                                socketOptions: { connectTimeoutMS: config.mongodb.dbTimeout },
-                                poolSize: config.mongodb.dbPoolSize }
+                                socketOptions: { connectTimeoutMS: Config.mongodb.dbTimeout },
+                                poolSize: Config.mongodb.dbPoolSize }
                    },
 		   function(err) {
                      if (err) {
@@ -117,7 +115,7 @@ function connectToDatabase() {
                      }
 
                      // post connection tasks:
-                     Domain.User.ensureAdminUserExists(config);
+                     Domain.User.ensureAdminUserExists(Config);
 
                      require('./router.js')(app);
                      console.log('Server Started ...');

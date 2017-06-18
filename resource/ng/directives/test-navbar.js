@@ -5,7 +5,7 @@ angular.module('ngDemoApp')
     
     return {
       //template: '<div><h1>Hello World</h1></div>',
-      templateUrl: '/js/ng/views/test-navbar.html',
+      templateUrl: '/ng/views/test-navbar.html',
       restrict: 'EA', // E = element, A = attribute, C = class, M = comment
       replace: true
     };

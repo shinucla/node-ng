@@ -3,7 +3,7 @@
 
 var routeToHome = function(req, res){
   var ip = req.connection.remoteAddress;
-  res.sendFile(NG_DIR + '/views/index.html');
+  res.sendFile(Config.ng_dir + '/views/index.html');
 };
 
 module.exports = function(app) {
@@ -38,7 +38,7 @@ module.exports = function(app) {
   app
     .route('/test')
     .get(function(req, res) {
-      res.sendFile(NG_DIR + '/views/test.html');
+      res.sendFile(Config.ng_dir + '/views/test.html');
     });
 
 };

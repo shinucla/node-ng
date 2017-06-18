@@ -21,7 +21,7 @@ angular.module('ngDemoApp')
     }
     
     return {
-      templateUrl: '/js/ng/views/product.html',
+      templateUrl: '/ng/views/product.html',
       restrict: 'E', // E = element, A = attribute, C = class, M = comment
       replace: true,
       controller: function($scope, $attrs) {

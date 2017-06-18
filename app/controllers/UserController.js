@@ -69,7 +69,7 @@ module.exports = function(app) {
   app
     .route('/user/api/extension/avatar')
     .post(app.apiRequiredLogin,
-          require('multer')({ dest: APP_ROOT_DIR + 'public/uploads/' }).single('avatarImageFile'),
+          require('multer')({ dest: Config.app_dir + '/public/uploads/' }).single('avatarImageFile'),
           function(req, res) {
             if (!req.file) return res.json({ result: 'file is empty' });
 
@@ -111,7 +111,7 @@ module.exports = function(app) {
          })
 
     .post(app.apiRequiredLogin,
-          require('multer')({ dest: APP_ROOT_DIR + 'public/uploads/' }).single('imageFile'),
+          require('multer')({ dest: Config.app_dir + '/public/uploads/' }).single('imageFile'),
           function(req, res) {
             var keySmall = req.file.filename + '_small_' + req.file.originalname;
             var keyLarge = req.file.filename + '_large_' + req.file.originalname;

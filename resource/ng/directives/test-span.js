@@ -6,7 +6,7 @@ angular.module('ngDemoApp')
     // but $rootScope can be available for directives
 
     return {
-      templateUrl: '/js/ng/views/test-span.html',
+      templateUrl: '/ng/views/test-span.html',
       restrict: 'EA',
       replace: true,
       link: function(Scope, element, attr) {
